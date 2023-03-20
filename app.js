@@ -37,7 +37,7 @@ app.get('/api/generate-response/:question', async (req, res) => {
       const answer = response.data.choices[0].text.trim();
       res.status(200).json({ answer });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to generate response.' });
+      res.status(500).json({error});
     }
   });
   

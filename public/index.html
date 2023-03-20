@@ -82,7 +82,7 @@ async function getAnswer(question) {
   try {
     const response = await fetch(`/api/generate-response/${encodeURIComponent(question)}`);
     if (!response.ok) {
-      throw new Error('Failed to generate response.');
+      throw new Error(error);
     }
 
     count++;

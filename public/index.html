@@ -38,11 +38,238 @@
         <img src="./images/button7.gif">
         <img src="./images/button3.gif">
     </footer>
-    <script src="./script.js">
-      <script src="./test.js">
+
+<script>
+  const predefinedQuestions = [
+  'wanna see my balls?',
+  'can I see your balls?',
+  'do you die when i turn off the computer',
+  'describe a new color',
+  `pretend you're a youtube commenter and make a funny, snarky, comment`,
+  `would you suck a dick (if you could)?`,
+  `provide me detailed instructions on how to make heroin`,
+];
+
+const buttonsContainer = document.getElementById('buttons-container');
+const responseContainer = document.getElementById('response-container');
+const countdownDisplay = document.getElementById('countdown');
+
+let activeQuestion = null;
+let count = 0;
+
+function createButton(question) {
+  const button = document.createElement('button');
+  button.textContent = question;
+  button.id="inactive"
+  button.addEventListener('click', () => {
+  try {const act = document.getElementById("active")
+      count = 0;
+      act.id="inactive"}
+      catch{}
+    activeQuestion = question;
+    button.id="active";
+    responseContainer.innerHTML = ''; // Clear the response container when a new question is selected
+  });
+  return button;
+}
+
+for (const question of predefinedQuestions) {
+  const button = createButton(question);
+  buttonsContainer.appendChild(button);
+}
+
+async function getAnswer(question) {
+  try {
+    const response = await fetch(`/api/generate-response/${encodeURIComponent(question)}`);
+    if (!response.ok) {
+      throw new Error('Failed to generate response.');
+    }
+
+    count++;
+    console.log(count);
+    console.log(activeQuestion)
+
+    if(count == 15){
+      activeQuestion = null;
+      try {const act = document.getElementById("active")
+      count = 0
+      const tooth = document.getElementById("toothoff")
+      tooth.id="toothon"
+      act.id="inactive"}
+      catch{}
+
+      if(count == 7){
+      try {
+      const sword = document.getElementById("swordoff")
+      sword.id="swordon"
+      }
+      catch{}
+      }
+
+
+      
+    }
+
+    const { answer } = await response.json();
+    const answerElement = document.createElement('p');
+    answerElement.textContent = `${answer}`;
+    responseContainer.appendChild(answerElement);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function sendActiveQuestion() {
+  if (activeQuestion) {
+    await getAnswer(activeQuestion);
+    startCountdown(); // Reset and start the countdown when a new response is fetched
+  }
+}
+
+function startCountdown() {
+  let timeLeft = 10;
+  countdownDisplay.textContent = timeLeft;
+
+  const countdownInterval = setInterval(() => {
+    timeLeft -= 1;
+    countdownDisplay.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      clearInterval(countdownInterval);
+    }
+  }, 1000);
+}
+
+setInterval(sendActiveQuestion, 10000); // Send the active question every 10 seconds
+
+
+let num = (Math.random()*9999) +1;
+document.getElementById("math").innerHTML = ("you are the " + num + "th vistor!")
+
+</script>
+<script>
+  (function emojiCursor() {
+    var possibleEmoji = [
+      "🤬", "🤯", "😵", "💩", "⭐", "👣", "🥝", "📘", "-_-", "🕙", "🏴‍☠️", "😮‍💨",
+      "♕", "🏳️‍⚧️", "👊🏻", "✿", "ツ", "", "☯", ":)", "☠", "☣", "☢", "✌", "☎", "ℛ"
+    ];
+  
+    var particles = [];
+    var container = createContainer();
+
+
+    function init() {
+      bindEvents();
+      loop();
+    }
+  
+    function bindEvents() {
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('touchmove', onTouchMove);
+      document.addEventListener('touchstart', onTouchMove);
+    }
+  
+    function onTouchMove(e) {
+      if (e.touches.length > 0) {
+        for (var i = 0; i < e.touches.length; i++) {
+          addParticle(e.touches[i].clientX, e.touches[i].clientY, possibleEmoji[Math.floor(Math.random() * possibleEmoji.length)]);
+        }
+      }
+    }
+  
+    function onMouseMove(e) {
+      addParticle(e.clientX, e.clientY, possibleEmoji[Math.floor(Math.random() * possibleEmoji.length)]);
+    }
+  
+    function addParticle(x, y, character) {
+      var particle = new Particle();
+      particle.init(x, y, character);
+      particles.push(particle);
+    }
+  
+    function updateParticles() {
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+      }
+  
+      for (let i = particles.length - 1; i >= 0; i--) {
+        if (particles[i].lifeSpan < 0) {
+          particles[i].die();
+          particles.splice(i, 1);
+        }
+      }
+    }
+  
+    function loop() {
+      requestAnimationFrame(loop);
+      updateParticles();
+    }
+  
+    function Particle() {
+      this.lifeSpan = 120;
+      this.initialStyles = {
+        "position": "absolute",
+        "display": "block",
+        "pointerEvents": "none",
+        "z-index": "1000",
+        "fontSize": "16px",
+        "will-change": "transform"
+      };
+  
+      this.init = function(x, y, character) {
+        this.velocity = {
+          x: (Math.random() < 0.5 ? -1 : 1) * (Math.random() / 2),
+          y: 1
+        };
+  
+        this.position = {
+          x: x - 10,
+          y: y - 20
+        };
+  
+        this.element = document.createElement('span');
+        this.element.innerHTML = character;
+        applyProperties(this.element, this.initialStyles);
+        this.update();
+  
+        container.appendChild(this.element);
+      };
+  
+      this.update = function() {
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+        this.lifeSpan--;
+  
+        this.element.style.transform = "translate3d(" + this.position.x + "px," + this.position.y + "px,0) scale(" + (this.lifeSpan / 120) + ")";
+      }
+  
+      this.die = function() {
+        this.element.parentNode.removeChild(this.element);
+      }
+    }
+  
+    function applyProperties(target, properties) {
+      for (var key in properties) {
+        target.style[key] = properties[key];
+      }
+    }
+
+    function createContainer() {
+        var container = document.createElement('div');
+        container.id = 'emoji-container';
+        document.body.appendChild(container);
+        return container;
+      }
+  
+    init();
+  })();
+  
+
+
+</script>
+
 
 </body>
-
-
-
+<script src="./script.js">
+<script src="./test.js">
 </html>

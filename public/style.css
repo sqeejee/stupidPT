@@ -1,0 +1,118 @@
+body {
+    background-color: #f4c9d3;
+    overflow-y: scroll;
+}
+
+marquee {
+    margin-top: 2.5%;
+    transform: translate(35%);
+    width: 60%;
+    size: 50;
+    font-size: xx-large;
+    border: black 1px dashed;
+}
+
+button {
+    margin: 15px;
+    height: 60px;
+    border-radius: 7px;
+    padding: 15px;
+    align-self: center;
+}
+
+#buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h2 {
+    margin-left: 1%;
+}
+
+#img1 {
+    position: absolute;
+    display: flex;
+    height: 60px;
+    margin: 0;
+    margin-top: 1%;
+    margin-left: 5%;
+    animation-name: spin;
+  animation-duration: 5000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear; 
+}
+
+#img2 {
+    position: absolute;
+    display: flex;
+    height: 60px;
+    margin: 0;
+    margin-top: -3%;
+    margin-left: 90%;
+}
+
+footer {
+  margin-top: 32%;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid black;
+  color: white;
+  text-align: center;
+  height: 300px;
+  text-decoration: overline;
+}
+
+
+#skull {
+    position: absolute;
+    margin-left: 80%;
+}
+
+@keyframes spin {
+    from {
+        transform:rotate(360deg);
+    }
+    to {
+        transform:rotate(0deg);
+    }
+}
+
+#active {
+    background-color: red;
+}
+
+
+p {
+    margin-left: 1%;
+}
+
+#emoji-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 10000000;
+  }
+  
+
+#toothoff{
+   visibility: hidden;
+}
+
+#toothon{
+    height: 180px;
+    transform: translate(500%, 100%);
+ }
+
+ #swordon{
+        height: 180px;
+        transform: translate(300%, 80%);
+ }
+
+ #swordoff{
+    visibility: hidden;
+ }

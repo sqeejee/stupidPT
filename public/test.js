@@ -1,163 +1,117 @@
 (function emojiCursor() {
-
     var possibleEmoji = [
-        "😊",
-        "🥺",
-        "💙",
-        "🥰",
-        "⭐",
-        "🌈",
-        "❤",
-        "🧡",
-        "<3",
-        "💛",
-        "💚",
-        "💜",
-        "🏳️‍🌈",
-        "🏳️‍⚧️",
-        "⚧",
-        "⚢",
-        "⌘",
-        "hi",
-        "^^",
-        ":)",
-        "(^◡^)",
-        "≧◠‿◠≦"
+      "🤬", "🤯", "😵", "💩", "⭐", "👣", "🥝", "📘", "-_-", "🕙", "🏴‍☠️", "😮‍💨",
+      "♕", "🏳️‍⚧️", "👊🏻", "✿", "ツ", "", "☯", ":)", "☠", "☣", "☢", "✌", "☎", "ℛ"
     ];
-    var width = window.innerWidth;
-    var height = window.innerHeight;
-    var cursor = {
-        x: width / 2,
-        y: width / 2
-    };
+  
     var particles = [];
+    var container = createContainer();
+
 
     function init() {
-        bindEvents();
-        loop();
+      bindEvents();
+      loop();
     }
-
-    // Bind events that are needed
+  
     function bindEvents() {
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('touchmove', onTouchMove);
-        document.addEventListener('touchstart', onTouchMove);
-
-        window.addEventListener('resize', onWindowResize);
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('touchmove', onTouchMove);
+      document.addEventListener('touchstart', onTouchMove);
     }
-
-    function onWindowResize(e) {
-        width = window.innerWidth;
-        height = window.innerHeight;
-    }
-
+  
     function onTouchMove(e) {
-        if (e.touches.length > 0) {
-            for (var i = 0; i < e.touches.length; i++) {
-                addParticle(e.touches[i].clientX, e.touches[i].clientY, possibleEmoji[Math.floor(Math.random() * possibleEmoji.length)]);
-            }
+      if (e.touches.length > 0) {
+        for (var i = 0; i < e.touches.length; i++) {
+          addParticle(e.touches[i].clientX, e.touches[i].clientY, possibleEmoji[Math.floor(Math.random() * possibleEmoji.length)]);
         }
+      }
     }
-
+  
     function onMouseMove(e) {
-        cursor.x = e.clientX;
-        cursor.y = e.clientY;
-
-        addParticle(cursor.x, cursor.y + window.pageYOffset, possibleEmoji[Math.floor(Math.random() * possibleEmoji.length)]);
+      addParticle(e.clientX, e.clientY, possibleEmoji[Math.floor(Math.random() * possibleEmoji.length)]);
     }
-
+  
     function addParticle(x, y, character) {
-        var particle = new Particle();
-        particle.init(x, y, character);
-        particles.push(particle);
+      var particle = new Particle();
+      particle.init(x, y, character);
+      particles.push(particle);
     }
-
+  
     function updateParticles() {
-
-        // Updated
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].update();
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+      }
+  
+      for (let i = particles.length - 1; i >= 0; i--) {
+        if (particles[i].lifeSpan < 0) {
+          particles[i].die();
+          particles.splice(i, 1);
         }
-
-        // Remove dead particles
-        for (let i = particles.length - 1; i >= 0; i--) {
-            if (particles[i].lifeSpan < 0) {
-                particles[i].die();
-                particles.splice(i, 1);
-            }
-        }
-
+      }
     }
-
+  
     function loop() {
-        requestAnimationFrame(loop);
-        updateParticles();
+      requestAnimationFrame(loop);
+      updateParticles();
     }
-
-    /**
-     * Particles
-     */
-
+  
     function Particle() {
-
-        this.lifeSpan = 120; //ms
-        this.initialStyles = {
-            "position": "absolute",
-            "display": "block",
-            "pointerEvents": "none",
-            "z-index": "10000000",
-            "fontSize": "16px",
-            "will-change": "transform"
+      this.lifeSpan = 120;
+      this.initialStyles = {
+        "position": "absolute",
+        "display": "block",
+        "pointerEvents": "none",
+        "z-index": "1000",
+        "fontSize": "16px",
+        "will-change": "transform"
+      };
+  
+      this.init = function(x, y, character) {
+        this.velocity = {
+          x: (Math.random() < 0.5 ? -1 : 1) * (Math.random() / 2),
+          y: 1
         };
-
-        // Init, and set properties
-        this.init = function(x, y, character) {
-
-            this.velocity = {
-                x: (Math.random() < 0.5 ? -1 : 1) * (Math.random() / 2),
-                y: 1
-            };
-
-            this.position = {
-                x: x - 10,
-                y: y - 20
-            };
-
-            this.element = document.createElement('span');
-            this.element.innerHTML = character;
-            applyProperties(this.element, this.initialStyles);
-            this.update();
-
-            document.body.appendChild(this.element);
+  
+        this.position = {
+          x: x - 10,
+          y: y - 20
         };
-
-        this.update = function() {
-            this.position.x += this.velocity.x;
-            this.position.y += this.velocity.y;
-            this.lifeSpan--;
-
-            this.element.style.transform = "translate3d(" + this.position.x + "px," + this.position.y + "px,0) scale(" + (this.lifeSpan / 120) + ")";
-        }
-
-        this.die = function() {
-            this.element.parentNode.removeChild(this.element);
-        }
-
+  
+        this.element = document.createElement('span');
+        this.element.innerHTML = character;
+        applyProperties(this.element, this.initialStyles);
+        this.update();
+  
+        container.appendChild(this.element);
+      };
+  
+      this.update = function() {
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+        this.lifeSpan--;
+  
+        this.element.style.transform = "translate3d(" + this.position.x + "px," + this.position.y + "px,0) scale(" + (this.lifeSpan / 120) + ")";
+      }
+  
+      this.die = function() {
+        this.element.parentNode.removeChild(this.element);
+      }
     }
-
-    /**
-     * Utils
-     */
-
-    // Applies css `properties` to an element.
+  
     function applyProperties(target, properties) {
-        for (var key in properties) {
-            target.style[key] = properties[key];
-        }
+      for (var key in properties) {
+        target.style[key] = properties[key];
+      }
     }
 
+    function createContainer() {
+        var container = document.createElement('div');
+        container.id = 'emoji-container';
+        document.body.appendChild(container);
+        return container;
+      }
+  
     init();
-})();
+  })();
+  
 
-
-console.log("test???")

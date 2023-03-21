@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT</title>
+    <title>FatGPT</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -80,7 +80,8 @@ for (const question of predefinedQuestions) {
 
 async function getAnswer(question) {
   try {
-    const response = await fetch(`/api/generate-response/${encodeURIComponent(question)}`);
+    console.log(encodeURIComponent(question))
+    const response = await fetch(`/api/generate-response/${encodeURIComponent(question)}`)
     if (!response.ok) {
       throw new Error(`Failed to generate response. Status code: ${response.status}, Status text: ${response.statusText}`);
     }

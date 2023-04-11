@@ -2,4 +2,4 @@
 
 https://stupidpt.herokuapp.com/
 
-add more
+/add more
